@@ -2,6 +2,7 @@
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AreaChart, BarChart } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const Dashboard = () => {
   // Dados de exemplo para o dashboard
