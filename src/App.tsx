@@ -11,6 +11,12 @@ import Properties from "./pages/Properties";
 import PropertyDetail from "./pages/PropertyDetail";
 import NotFound from "./pages/NotFound";
 
+// Admin routes
+import Dashboard from "./pages/admin/Dashboard";
+import AdminProperties from "./pages/admin/Properties";
+import Clients from "./pages/admin/Clients";
+import Settings from "./pages/admin/Settings";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -20,11 +26,19 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          {/* Public routes */}
           <Route path="/" element={<Index />} />
           <Route path="/sobre" element={<About />} />
           <Route path="/contato" element={<Contact />} />
           <Route path="/imoveis" element={<Properties />} />
           <Route path="/imovel/:id" element={<PropertyDetail />} />
+          
+          {/* Admin routes */}
+          <Route path="/admin" element={<Dashboard />} />
+          <Route path="/admin/imoveis" element={<AdminProperties />} />
+          <Route path="/admin/clientes" element={<Clients />} />
+          <Route path="/admin/configuracoes" element={<Settings />} />
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

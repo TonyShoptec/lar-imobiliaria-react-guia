@@ -1,95 +1,101 @@
 
 import { useState } from 'react';
-import { Button } from "@/components/ui/button";
-import { Link } from 'react-router-dom';
-import { Menu } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
+import { Button } from './ui/button';
+import { cn } from '@/lib/utils';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  
+  const navItems = [
+    { name: 'Início', path: '/' },
+    { name: 'Imóveis', path: '/imoveis' },
+    { name: 'Sobre', path: '/sobre' },
+    { name: 'Contato', path: '/contato' }
+  ];
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex justify-between items-center">
-          {/* Logo */}
+    <header className="sticky top-0 z-30 w-full bg-white shadow-sm">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
-            <Link to="/" className="flex items-center gap-2">
-              <span className="text-real-primary font-bold text-2xl font-playfair">Lar</span>
-              <span className="text-real-secondary font-playfair">Imóveis</span>
+            <Link to="/" className="flex items-center">
+              <span className="text-2xl font-bold text-real-primary font-playfair">Lar Imóveis</span>
             </Link>
           </div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link to="/" className="text-gray-700 hover:text-real-primary font-medium transition-colors">
-              Início
+          
+          <nav className="hidden md:flex items-center space-x-8">
+            {navItems.map(item => (
+              <Link
+                key={item.name}
+                to={item.path}
+                className={cn(
+                  "text-base font-medium transition-colors hover:text-real-secondary",
+                  location.pathname === item.path ? "text-real-secondary" : "text-gray-600"
+                )}
+              >
+                {item.name}
+              </Link>
+            ))}
+            <Link to="/admin">
+              <Button variant="outline">
+                Área Administrativa
+              </Button>
             </Link>
-            <Link to="/imoveis" className="text-gray-700 hover:text-real-primary font-medium transition-colors">
-              Imóveis
-            </Link>
-            <Link to="/sobre" className="text-gray-700 hover:text-real-primary font-medium transition-colors">
-              Sobre Nós
-            </Link>
-            <Link to="/contato" className="text-gray-700 hover:text-real-primary font-medium transition-colors">
-              Contato
-            </Link>
-            <Button className="bg-real-primary hover:bg-opacity-90 text-white">
-              Anuncie seu imóvel
-            </Button>
           </nav>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <Button 
-              variant="ghost" 
-              size="icon"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label="Menu"
+          
+          <div className="flex md:hidden">
+            <button
+              type="button"
+              className="text-gray-600"
+              onClick={toggleMenu}
             >
-              <Menu className="h-6 w-6" />
-            </Button>
+              <span className="sr-only">Abrir menu</span>
+              {isMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
           </div>
         </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <nav className="md:hidden pt-4 pb-2 animate-fade-in">
-            <div className="flex flex-col space-y-3">
-              <Link 
-                to="/" 
-                className="text-gray-700 hover:text-real-primary font-medium px-2 py-2 rounded-md hover:bg-gray-50 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Início
-              </Link>
-              <Link 
-                to="/imoveis" 
-                className="text-gray-700 hover:text-real-primary font-medium px-2 py-2 rounded-md hover:bg-gray-50 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Imóveis
-              </Link>
-              <Link 
-                to="/sobre" 
-                className="text-gray-700 hover:text-real-primary font-medium px-2 py-2 rounded-md hover:bg-gray-50 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Sobre Nós
-              </Link>
-              <Link 
-                to="/contato" 
-                className="text-gray-700 hover:text-real-primary font-medium px-2 py-2 rounded-md hover:bg-gray-50 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Contato
-              </Link>
-              <Button className="bg-real-primary hover:bg-opacity-90 text-white w-full">
-                Anuncie seu imóvel
-              </Button>
-            </div>
-          </nav>
-        )}
       </div>
+      
+      {/* Mobile menu */}
+      {isMenuOpen && (
+        <div className="md:hidden bg-white p-4 shadow-md">
+          <div className="space-y-1 pb-3 pt-2">
+            {navItems.map(item => (
+              <Link
+                key={item.name}
+                to={item.path}
+                className={cn(
+                  "block rounded-md px-3 py-2 text-base font-medium",
+                  location.pathname === item.path
+                    ? "bg-real-primary/10 text-real-primary"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-real-primary"
+                )}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {item.name}
+              </Link>
+            ))}
+            <Link
+              to="/admin"
+              className="block rounded-md px-3 py-2 text-base font-medium text-white bg-real-primary hover:bg-real-primary/90"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Área Administrativa
+            </Link>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
